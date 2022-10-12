@@ -4,10 +4,44 @@ help() {
   echo "Usage:"
   echo "  zmicro sshfs <args ...>"
   echo ""
+  echo "Example:"
+  echo "  zmicro sshfs mount user@devops:/remote_path /local_path"
+  echo "  zmicro sshfs unmount /local_path"
+  echo ""
+  echo "Config:"
+  echo "  Add the following to /etc/sshfs/secrets:"
+  echo "    user@devops:/custom_path username password"
 }
 
 core() {
-  sshfs "$@"
+  local action=$1
+  local args=${@:2}
+
+  case $action in
+  "mount")
+    local remote_path=$2
+    local local_path=$3
+    local args=${@:4}
+    if [ ! -d "$local_path" ]; then
+      sudo mkdir -p $local_path
+    fi
+
+    if [ ! -w "$local_path" ]; then
+      sudo chown $USER $local_path
+    fi
+
+    sshfs $remote_path $local_path $args
+    ;;
+  "umount")
+    local local_path=$2
+    local args=${@:3}
+    sudo mount -f $local_path $args
+    ;;
+  *)
+    log::error "unknown action: $action in mount,umount"
+    exit 1
+    ;;
+  esac
 }
 
 run() {
