@@ -1,0 +1,27 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  zmicro package install sshfs <args...>"
+  echo ""
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  which sshfs >>/dev/null 2>&1
+  if [ "$?" != "0" ]; then
+    pm install -y sshfs
+  fi
+
+  log::success "install sshfs success."
+}
+
+run() {
+  core $@
+}
+
+run $@

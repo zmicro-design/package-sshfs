@@ -1,0 +1,17 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  zmicro sshfs <args ...>"
+  echo ""
+}
+
+core() {
+  sshfs "$@"
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"
