@@ -18,6 +18,9 @@ core() {
   local args=${@:2}
 
   case $action in
+  "help" | "-h" | "--help")
+    help
+    ;;
   "mount")
     local remote_path=$2
     local local_path=$3
